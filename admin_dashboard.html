@@ -1,0 +1,959 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>DriveSafely — Admin Dashboard (Modern)</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ---------- Theme / Layout ---------- */
+        :root {
+            --bg-grad: linear-gradient(135deg, #f6f8fc 0%, #eef3fb 50%, #f9fbff 100%);
+            --glass: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.65);
+            --accent: #3b82f6;
+            /* blue */
+            --accent-2: #ffb200;
+            /* yellow */
+            --muted: #6b7280;
+            --success: #10b981;
+            --danger: #ef4444;
+            --shadow: 0 8px 30px rgba(14, 30, 37, 0.08);
+            --radius: 14px;
+            --glass-border: rgba(255, 255, 255, 0.6);
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: Inter, "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
+        }
+
+        body {
+            background: var(--bg-grad);
+            display: flex;
+            min-height: 100vh;
+            color: #0f172a;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ---------- Sidebar ---------- */
+        .sidebar {
+            width: 280px;
+            padding: 28px;
+            box-shadow: 8px 0 30px rgba(14, 30, 37, 0.06);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.7));
+            backdrop-filter: blur(6px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .brand .logo {
+            width: 46px;
+            height: 46px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            box-shadow: 0 6px 18px rgba(59, 130, 246, 0.15);
+        }
+
+        .brand h1 {
+            font-size: 18px;
+            margin: 0
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 18px 0 0 0
+        }
+
+        nav li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            border-radius: 10px;
+            color: #0b1220;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all .22s ease;
+        }
+
+        nav li:hover {
+            transform: translateX(6px);
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.07), rgba(255, 178, 0, 0.03));
+        }
+
+        nav li i {
+            margin-right: 12px;
+            color: var(--accent);
+        }
+
+        .badge {
+            background: var(--danger);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+        }
+
+        /* ---------- Main ---------- */
+        .workspace {
+            flex: 1;
+            padding: 28px 36px;
+            overflow: auto;
+        }
+
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px
+        }
+
+        .search-global {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .search-global input {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(13, 20, 30, 0.06);
+            width: 320px;
+            background: transparent;
+            outline: none;
+            box-shadow: inset 0 2px 8px rgba(14, 30, 37, 0.03);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: none;
+            background: var(--accent);
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(59, 130, 246, 0.12);
+        }
+
+        .btn.secondary {
+            background: #fff;
+            color: var(--accent);
+            border: 1px solid rgba(14, 30, 37, 0.06);
+            box-shadow: none;
+        }
+
+        /* ---------- Grid / Cards ---------- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            transition: transform .22s ease, box-shadow .22s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 40px rgba(14, 30, 37, 0.08);
+        }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            color: #0f172a;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        /* ---------- Tables ---------- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            color: #0f172a
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(14, 30, 37, 0.06);
+        }
+
+        thead th {
+            color: var(--accent-2);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px
+        }
+
+        tbody tr:hover {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.03), rgba(255, 178, 0, 0.02));
+            transform: translateX(6px);
+            transition: all .18s ease;
+        }
+
+        .action-btn {
+            border-radius: 8px;
+            padding: 6px 10px;
+            border: none;
+            cursor: pointer
+        }
+
+        .action-edit {
+            background: var(--accent);
+            color: #fff
+        }
+
+        .action-delete {
+            background: var(--danger);
+            color: #fff
+        }
+
+        /* ---------- Lists ---------- */
+        ul.simple {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul.simple li {
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(14, 30, 37, 0.04)
+        }
+
+        /* ---------- Modal ---------- */
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(14, 30, 37, 0.45);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-dialog {
+            width: 520px;
+            background: linear-gradient(180deg, #fff, #fbfdff);
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(2, 6, 23, 0.2);
+            transform: translateY(10px);
+            animation: pop .18s ease;
+        }
+
+        @keyframes pop {
+            from {
+                opacity: 0;
+                transform: translateY(18px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .field {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px
+        }
+
+        .field input,
+        .field select,
+        textarea {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(14, 30, 37, 0.06)
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 14px
+        }
+
+        /* ---------- small responsive ---------- */
+        @media (max-width:900px) {
+            .sidebar {
+                display: none
+            }
+
+            .workspace {
+                padding: 20px
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" role="navigation" aria-label="Admin sidebar">
+        <div class="brand">
+            <div class="logo">DS</div>
+            <div>
+                <h1>DriveSafely</h1>
+                <div class="muted">Admin Panel</div>
+            </div>
+        </div>
+
+        <nav>
+            <ul>
+                <li onclick="show('overview')"><i class="fas fa-home"></i> Overview</li>
+                <li onclick="show('users')"><i class="fas fa-users"></i> Manage Users <span id="user-count"
+                        class="badge" style="margin-left:8px"></span></li>
+                <li onclick="show('quizzes')"><i class="fas fa-pen"></i> Manage Quizzes <span id="quiz-count"
+                        class="badge" style="margin-left:8px"></span></li>
+                <li onclick="show('fines')"><i class="fas fa-money-bill"></i> Manage Fines <span id="fine-count"
+                        class="badge" style="margin-left:8px"></span></li>
+                <li onclick="show('messages')"><i class="fas fa-envelope"></i> Messages <span id="msg-count"
+                        class="badge" style="margin-left:8px"></span></li>
+                <li onclick="show('search')"><i class="fas fa-search"></i> Search User</li>
+                <li onclick="show('reports')"><i class="fas fa-chart-bar"></i> Reports</li>
+                <li onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Workspace -->
+    <main class="workspace">
+        <div class="top-row">
+            <div>
+                <h2 style="margin:0">Admin Dashboard</h2>
+                <div class="muted">Manage users, quizzes, fines & messages</div>
+            </div>
+            <div class="search-global">
+                <input id="globalSearch" placeholder="Search (name / email) across lists..."
+                    oninput="globalFilter(this.value)">
+                <!-- Add User button removed as requested -->
+            </div>
+        </div>
+
+        <!-- GRID -->
+        <section class="grid" id="grid">
+
+            <!-- Overview (cards) -->
+            <div class="card" id="overview">
+                <h3><i class="fas fa-tachometer-alt" style="color:var(--accent)"></i> Quick Overview</h3>
+                <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+                    <div
+                        style="flex:1;min-width:160px;background:linear-gradient(180deg,#fff,#fbfdff);padding:16px;border-radius:12px;border:1px solid rgba(14,30,37,0.04)">
+                        <div style="font-size:22px;font-weight:700" id="summary-users">0</div>
+                        <div class="muted">Total Users</div>
+                    </div>
+                    <div
+                        style="flex:1;min-width:160px;background:linear-gradient(180deg,#fff,#fbfdff);padding:16px;border-radius:12px;border:1px solid rgba(14,30,37,0.04)">
+                        <div style="font-size:22px;font-weight:700" id="summary-quizzes">0</div>
+                        <div class="muted">Quizzes</div>
+                    </div>
+                    <div
+                        style="flex:1;min-width:160px;background:linear-gradient(180deg,#fff,#fbfdff);padding:16px;border-radius:12px;border:1px solid rgba(14,30,37,0.04)">
+                        <div style="font-size:22px;font-weight:700" id="summary-fines">0</div>
+                        <div class="muted">Fines</div>
+                    </div>
+                    <div
+                        style="flex:1;min-width:160px;background:linear-gradient(180deg,#fff,#fbfdff);padding:16px;border-radius:12px;border:1px solid rgba(14,30,37,0.04)">
+                        <div style="font-size:22px;font-weight:700" id="summary-msgs">0</div>
+                        <div class="muted">Messages</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users table -->
+            <div class="card" id="users" style="display:none">
+                <h3><i class="fas fa-users" style="color:var(--accent)"></i> Manage Users</h3>
+                <div style="margin:10px 0">
+                    <input id="userSearch" placeholder="Filter users by name/email..."
+                        style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(14,30,37,0.06)"
+                        oninput="filterUserTable(this.value)">
+                </div>
+                <div style="overflow:auto;max-height:420px">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Quizzes -->
+            <div class="card" id="quizzes" style="display:none">
+                <h3><i class="fas fa-pen" style="color:var(--accent)"></i> Manage Quizzes</h3>
+                <div style="display:flex;gap:8px;margin-bottom:10px">
+                    <button class="btn secondary" onclick="openModal('quiz')"><i class="fas fa-plus"></i> Add
+                        Quiz</button>
+                    <input id="quizSearch" placeholder="Assign to user (email) to push to user"
+                        style="padding:8px;border-radius:8px;border:1px solid rgba(14,30,37,0.06)" />
+                </div>
+                <div style="overflow:auto;max-height:420px">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Score</th>
+                                <th>Assigned To</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="quiz-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Fines -->
+            <div class="card" id="fines" style="display:none">
+                <h3><i class="fas fa-money-bill" style="color:var(--accent)"></i> Manage Fines</h3>
+                <div style="display:flex;gap:8px;margin-bottom:10px">
+                    <button class="btn secondary" onclick="openModal('fine')"><i class="fas fa-plus"></i> Add
+                        Fine</button>
+                    <input id="fineAssign" placeholder="Assign to user (email) to add to user"
+                        style="padding:8px;border-radius:8px;border:1px solid rgba(14,30,37,0.06)" />
+                </div>
+                <div style="overflow:auto;max-height:420px">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Assigned To</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fine-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="card" id="messages" style="display:none">
+                <h3><i class="fas fa-envelope" style="color:var(--accent)"></i> Messages</h3>
+                <div style="display:flex;gap:8px;margin-bottom:10px">
+                    <button class="btn secondary" onclick="openModal('message')"><i class="fas fa-plus"></i> Add
+                        Message</button>
+                    <input id="msgAssign" placeholder="Assign to user (email) to add message"
+                        style="padding:8px;border-radius:8px;border:1px solid rgba(14,30,37,0.06)" />
+                </div>
+                <div style="overflow:auto;max-height:420px">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Message</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="msg-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Search User -->
+            <div class="card" id="search" style="display:none">
+                <h3><i class="fas fa-search" style="color:var(--accent)"></i> Search User Dashboard (by email)</h3>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                    <input id="searchEmail" placeholder="user@example.com"
+                        style="padding:10px;border-radius:8px;border:1px solid rgba(14,30,37,0.06)">
+                    <button class="btn" onclick="searchUser()"><i class="fas fa-search"></i> Search</button>
+                </div>
+                <p id="searchStatus" style="color:var(--danger);margin-top:8px"></p>
+
+                <div id="userDashboard" style="display:none;margin-top:18px">
+                    <div style="display:flex;gap:14px;align-items:center;">
+                        <img id="uPic" src="" alt="pic"
+                            style="width:82px;height:82px;border-radius:12px;border:2px solid var(--accent);object-fit:cover">
+                        <div>
+                            <div id="uName" style="font-weight:700;font-size:16px"></div>
+                            <div id="uEmail" class="muted" style="font-size:13px"></div>
+                            <div id="uPhone" class="muted" style="font-size:13px"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                        <div style="background:#fff;padding:12px;border-radius:10px">
+                            <div style="font-weight:700">Reminders</div>
+                            <ul id="uReminders" class="simple" style="margin-top:10px"></ul>
+                        </div>
+                        <div style="background:#fff;padding:12px;border-radius:10px">
+                            <div style="font-weight:700">Quizzes</div>
+                            <ul id="uQuizzes" class="simple" style="margin-top:10px"></ul>
+                        </div>
+                        <div style="background:#fff;padding:12px;border-radius:10px">
+                            <div style="font-weight:700">Fines</div>
+                            <ul id="uFines" class="simple" style="margin-top:10px"></ul>
+                        </div>
+                        <div style="background:#fff;padding:12px;border-radius:10px">
+                            <div style="font-weight:700">Messages</div>
+                            <ul id="uMessages" class="simple" style="margin-top:10px"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports -->
+            <div class="card" id="reports" style="display:none">
+                <h3><i class="fas fa-chart-area" style="color:var(--accent)"></i> Reports</h3>
+                <canvas id="reportChart" height="160"></canvas>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-dialog">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <h3 id="modalTitle">Add</h3>
+                <button class="action-delete" onclick="closeModal()"
+                    style="border:none;padding:8px 10px;border-radius:8px;color:#fff;background:var(--danger)">Close</button>
+            </div>
+
+            <div id="modalBody" style="margin-top:12px">
+                <!-- injected fields -->
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn" onclick="saveData()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ============================
+           Storage model & helpers
+           ============================
+        
+           Each user is stored in localStorage under the user's email key:
+             key = user's email (string)
+             value = JSON.stringify({
+               username, email, phone, joinedDate, profilePic,
+               reminders: [str...],
+               quizzes: [{title,score,assignedBy?}],
+               fines: [{type,amount,assignedBy?}],
+               contacts: [{date,text,status}]
+             })
+        
+           There are also UI arrays to show in admin tables (platform-wide).
+        */
+
+        const sampleUsers = [
+            {
+                username: "Ravi", email: "ravi@mail.com", phone: "+91-98765 43210", joinedDate: "2025-01-05", profilePic: "https://i.pravatar.cc/100?img=3",
+                reminders: ["Check Tire Pressure", "Insurance renewal"], quizzes: [{ title: "Traffic Rules", score: 90 }], fines: [{ type: "Speeding", amount: 500 }], contacts: [{ date: "2025-09-18", text: "Help with fine", status: "Read" }]
+            },
+            {
+                username: "Anita", email: "anita@mail.com", phone: "+91-91234 56789", joinedDate: "2024-11-21", profilePic: "https://i.pravatar.cc/100?img=6",
+                reminders: ["Helmet check"], quizzes: [{ title: "Road Signs", score: 78 }], fines: [], contacts: []
+            }
+        ];
+
+        // platform lists (admin-level)
+        let users = []; // simplified list of {name,email,phone,joinedDate}
+        let quizzes = [];
+        let fines = [];
+        let messages = [];
+
+        /* ---------- initialize sample data if empty ---------- */
+        function seedIfEmpty() {
+            // if there are no user keys at all, seed a couple to test
+            const anyKey = localStorage.getItem('seeded_v1');
+            if (!anyKey) {
+                sampleUsers.forEach(u => {
+                    localStorage.setItem(u.email, JSON.stringify({
+                        username: u.username, email: u.email, phone: u.phone, joinedDate: u.joinedDate, profilePic: u.profilePic,
+                        reminders: u.reminders || [], quizzes: u.quizzes || [], fines: u.fines || [], contacts: u.contacts || []
+                    }));
+                });
+                localStorage.setItem('seeded_v1', '1');
+            }
+        }
+        seedIfEmpty();
+
+        /* ---------- read users from localStorage to populate admin users[] ---------- */
+        function loadPlatformData() {
+            users = []; quizzes = []; fines = []; messages = [];
+            // scan localStorage for user keys (simple heuristic: if value parses and has email)
+            for (let i = 0; i < localStorage.length; i++) {
+                const k = localStorage.key(i);
+                if (k === 'seeded_v1') continue;
+                try {
+                    const v = JSON.parse(localStorage.getItem(k));
+                    if (v && v.email) {
+                        users.push({ name: v.username || "Unknown", email: v.email, phone: v.phone || "", joinedDate: v.joinedDate || "" });
+                        // collect user-level items into platform lists (for admin overview)
+                        (v.quizzes || []).forEach(q => quizzes.push({ ...q, assignedTo: v.email }));
+                        (v.fines || []).forEach(f => fines.push({ ...f, assignedTo: v.email }));
+                        (v.contacts || []).forEach(m => messages.push({ ...m, assignedTo: v.email }));
+                    }
+                } catch (e) { /* ignore */ }
+            }
+        }
+
+        /* ---------- UI renderers ---------- */
+        function renderAll() {
+            loadPlatformData();
+            renderSummary();
+            renderUserTable();
+            renderQuizTable();
+            renderFineTable();
+            renderMsgTable();
+            updateCounts();
+            drawReports();
+        }
+
+        function renderSummary() {
+            document.getElementById('summary-users').textContent = users.length;
+            document.getElementById('summary-quizzes').textContent = quizzes.length;
+            document.getElementById('summary-fines').textContent = fines.length;
+            document.getElementById('summary-msgs').textContent = messages.length;
+        }
+        function updateCounts() {
+            document.getElementById('user-count').textContent = users.length;
+            document.getElementById('quiz-count').textContent = quizzes.length;
+            document.getElementById('fine-count').textContent = fines.length;
+            document.getElementById('msg-count').textContent = messages.length;
+        }
+
+        function renderUserTable(filter = '') {
+            const tbody = document.getElementById('user-table');
+            tbody.innerHTML = '';
+            users.filter(u => (u.name + ' ' + u.email).toLowerCase().includes(filter.toLowerCase()))
+                .forEach((u, i) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${escapeHtml(u.name)}</td>
+                    <td>${escapeHtml(u.email)}</td>
+                    <td>${escapeHtml(u.phone)}</td>
+                    <td>${escapeHtml(u.joinedDate)}</td>
+                    <td>
+                      <button class="action-btn action-edit" onclick="openEditUser('${u.email}')">Edit</button>
+                      <button class="action-btn action-delete" onclick="removeUser('${u.email}')">Delete</button>
+                    </td>`;
+                    tbody.appendChild(tr);
+                });
+        }
+
+        function renderQuizTable() {
+            const tbody = document.getElementById('quiz-table'); tbody.innerHTML = '';
+            quizzes.forEach((q, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${escapeHtml(q.title)}</td><td>${escapeHtml(q.score + '%')}</td><td>${escapeHtml(q.assignedTo || '—')}</td>
+      <td><button class="action-btn action-delete" onclick="deletePlatformItem('quiz',${idx})">Delete</button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderFineTable() {
+            const tbody = document.getElementById('fine-table'); tbody.innerHTML = '';
+            fines.forEach((f, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${escapeHtml(f.type)}</td><td>${escapeHtml(f.amount)}</td><td>${escapeHtml(f.assignedTo || '—')}</td>
+      <td><button class="action-btn action-delete" onclick="deletePlatformItem('fine',${idx})">Delete</button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderMsgTable() {
+            const tbody = document.getElementById('msg-table'); tbody.innerHTML = '';
+            messages.forEach(m => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${escapeHtml(m.date)}</td><td>${escapeHtml(m.text)}</td><td>${escapeHtml(m.status)}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* ---------- helper to escape HTML ---------- */
+        function escapeHtml(s = '') { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+        /* ---------- show/hide sections ---------- */
+        function show(id) {
+            document.querySelectorAll('.card').forEach(c => c.style.display = 'none');
+            // mapping id -> element id in main
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'block';
+            // keep sidebar counts up-to-date
+            updateCounts();
+        }
+
+        /* ---------- modal for adding items ---------- */
+        let currentModalType = null;
+        let editingEmail = null; // for editing user
+        function openModal(type, payload = null) {
+            currentModalType = type;
+            editingEmail = payload || null;
+            const modal = document.getElementById('modal');
+            const body = document.getElementById('modalBody');
+            const title = document.getElementById('modalTitle');
+            body.innerHTML = '';
+            if (type === 'user') {
+                title.textContent = editingEmail ? 'Edit User' : 'Add User';
+                let existing = editingEmail ? JSON.parse(localStorage.getItem(editingEmail)) : {};
+                body.innerHTML = `
+      <div class="field"><input id="m_name" placeholder="Full name" value="${escapeHtml(existing.username || '')}"></div>
+      <div class="field"><input id="m_email" placeholder="Email" value="${escapeHtml(existing.email || '')}"></div>
+      <div class="field"><input id="m_phone" placeholder="Phone" value="${escapeHtml(existing.phone || '')}"></div>
+      <div class="field"><input id="m_joined" placeholder="Joined Date (YYYY-MM-DD)" value="${escapeHtml(existing.joinedDate || '')}"></div>
+      <div class="field"><input id="m_pic" placeholder="Profile picture URL (optional)" value="${escapeHtml(existing.profilePic || '')}"></div>
+      <div style="margin-top:8px;"><small class="muted">Note: users are stored in localStorage keyed by email.</small></div>
+    `;
+            } else if (type === 'quiz') {
+                title.textContent = 'Add Quiz';
+                body.innerHTML = `
+      <div class="field"><input id="m_q_title" placeholder="Quiz title"></div>
+      <div class="field"><input id="m_q_score" placeholder="Score (%)" type="number" min="0" max="100"></div>
+      <div class="field"><input id="m_q_assign" placeholder="Assign to user email (optional)"></div>
+    `;
+            } else if (type === 'fine') {
+                title.textContent = 'Add Fine';
+                body.innerHTML = `
+      <div class="field"><input id="m_f_type" placeholder="Fine type (e.g. Speeding)"></div>
+      <div class="field"><input id="m_f_amount" placeholder="Amount (₹)"></div>
+      <div class="field"><input id="m_f_assign" placeholder="Assign to user email (optional)"></div>
+    `;
+            } else if (type === 'message') {
+                title.textContent = 'Add Message';
+                body.innerHTML = `
+      <div class="field"><input id="m_msg_date" placeholder="Date (YYYY-MM-DD)" value="${new Date().toISOString().slice(0, 10)}"></div>
+      <div class="field"><textarea id="m_msg_text" placeholder="Message text" rows="3"></textarea></div>
+      <div class="field"><select id="m_msg_status"><option>Sent</option><option>Read</option><option>Unread</option></select></div>
+      <div class="field"><input id="m_msg_assign" placeholder="Assign to user email (optional)"></div>
+    `;
+            }
+            modal.classList.add('show');
+        }
+        function closeModal() { document.getElementById('modal').classList.remove('show'); currentModalType = null; editingEmail = null; }
+
+        /* ---------- save from modal ---------- */
+        function saveData() {
+            if (!currentModalType) return closeModal();
+
+            if (currentModalType === 'user') {
+                const name = document.getElementById('m_name').value.trim();
+                const email = document.getElementById('m_email').value.trim().toLowerCase();
+                const phone = document.getElementById('m_phone').value.trim();
+                const joined = document.getElementById('m_joined').value.trim() || new Date().toISOString().slice(0, 10);
+                const pic = document.getElementById('m_pic').value.trim() || `https://i.pravatar.cc/100?u=${encodeURIComponent(email)}`;
+
+                if (!email || !name) {
+                    alert('Name and email required');
+                    return;
+                }
+
+                // if editing and email changed, remove old key
+                if (editingEmail && editingEmail !== email) {
+                    localStorage.removeItem(editingEmail);
+                    // remove previous user record from users[] will be refreshed by renderAll
+                }
+
+                const userObj = {
+                    username: name, email, phone, joinedDate: joined, profilePic: pic,
+                    reminders: (JSON.parse(localStorage.getItem(email)) || {}).reminders || [],
+                    quizzes: (JSON.parse(localStorage.getItem(email)) || {}).quizzes || [],
+                    fines: (JSON.parse(localStorage.getItem(email)) || {}).fines || [],
+                    contacts: (JSON.parse(localStorage.getItem(email)) || {}).contacts || []
+                };
+
+                localStorage.setItem(email, JSON.stringify(userObj));
+                closeModal();
+                renderAll();
+                alert('User saved');
+            }
+
+            if (currentModalType === 'quiz') {
+                const title = document.getElementById('m_q_title').value.trim();
+                const score = Number(document.getElementById('m_q_score').value) || 0;
+                const assign = document.getElementById('m_q_assign').value.trim().toLowerCase();
+                if (!title) { alert('Title required'); return; }
+                const item = { title, score, assignedTo: assign || null, createdAt: new Date().toISOString() };
+                quizzes.push(item);
+                // if assigned to user, push into that user's quizzes
+                if (assign) {
+                    let u = JSON.parse(localStorage.getItem(assign));
+                    if (u) {
+                        u.quizzes = u.quizzes || [];
+                        u.quizzes.push({ title, score });
+                        localStorage.setItem(assign, JSON.stringify(u));
+                    } else {
+                        alert('Assigned user not found — quiz saved to platform only.');
+                    }
+                }
+                closeModal(); renderAll();
+            }
+
+            if (currentModalType === 'fine') {
+                const type = document.getElementById('m_f_type').value.trim();
+                const amount = document.getElementById('m_f_amount').value.trim();
+                const assign = document.getElementById('m_f_assign').value.trim().toLowerCase();
+                if (!type || !amount) { alert('type & amount required'); return; }
+                const item = { type, amount, assignedTo: assign || null, createdAt: new Date().toISOString() };
+                fines.push(item);
+                if (assign) {
+                    let u = JSON.parse(localStorage.getItem(assign));
+                    if (u) {
+                        u.fines = u.fines || [];
+                        u.fines.push({ type, amount });
+                        localStorage.setItem(assign, JSON.stringify(u));
+                    } else {
+                        alert('Assigned user not found — fine saved to platform only.');
+                    }
+                }
+                closeModal(); renderAll();
+            }
+
+            if (currentModalType === 'message') {
+                const date = document.getElementById('m_msg_date').value || new Date().toISOString().slice(0, 10);
+                const text = document.getElementById('m_msg_text').value.trim();
+                const status = document.getElementById('m_msg_status').value;
+                const assign = document.getElementById('m_msg_assign').value.trim().toLowerCase();
+                if (!text) { alert('Message text required'); return; }
+                const item = { date, text, status, assignedTo: assign || null };
+                messages.push(item);
+                if (assign) {
+                    let u = JSON.parse(localStorage.getItem(assign));
+                    if (u) {
+                        u.contacts = u.contacts || [];
+                        u.contacts.push({ date, text, status });
+                        localStorage.setItem(assign, JSON.stringify(u));
+                    } else {
+                        alert('Assigned user not found — message saved to platform only.');
+                    }
+                }
+                closeModal(); renderAll();
+            }
+        }
+
+        /* ---------- delete platform item ---------- */
+        function deletePlatformItem(kind, idx) {
+            if (!confirm('Delete this item?')) return;
+            if (kind === 'quiz') { quizzes.splice(idx, 1); }
+            if (kind === 'fine') { fines.splice(idx, 1); }
+            renderAll();
+        }
+
+        /* ---------- user edit/delete ---------- */
+        function openEditUser(email) {
+            openModal('user', email);
+        }
+        function removeUser(email) {
+            if (!confirm('Remove user and their local data?')) return;
+            localStorage.removeItem(email);
+            renderAll();
+        }
+
+        /* ---------- search user for admin ---------- */
+        function searchUser() {
+            const email = (document.getElementById('searchEmail').value || '').trim().toLowerCase();
+            const status = document.getElementById('searchStatus');
+            const display = document.getElementById('userDashboard');
+            if (!email) { status.textContent = 'Please enter an email'; display.style.display = 'none'; return; }
+            const data = JSON.parse(localStorage.getItem(email));
+            if (!data) { status.textContent = 'User not found in localStorage'; display.style.display = 'none'; return; }
+            status.textContent = '';
+            display.style.display = 'block';
+            document.getElementById('uPic').src = data.profilePic || `https://i.pravatar.cc/100?u=${encodeURIComponent(email)}`;
+            document.getElementById('uName').textContent = data.username || '—';
+            document.getElementById('uEmail').textContent = data.email || '—';
+            document.getElementById('uPhone').textContent = data.phone || '—';
+
+            const r = document.getElementById('uReminders'); r.innerHTML = '';
+            (data.reminders || []).forEach(it => { const li = document.createElement('li'); li.textContent = it; r.appendChild(li); });
+
+            const q = document.getElementById('uQuizzes'); q.innerHTML = '';
+            (data.quizzes || []).forEach(it => { const li = document.createElement('li'); li.textContent = `${it.title} — ${it.score}%`; q.appendChild(li); });
+
+            const f = document.getElementById('uFines'); f.innerHTML = '';
+            (data.fines || []).forEach(it => { const li = document.createElement('li'); li.textContent = `${it.type} — ${it.amount}`; f.appendChild(li); });
+
+            const m = document.getElementById('uMessages'); m.innerHTML = '';
+            (data.contacts || []).forEach(it => { const li = document.createElement('li'); li.textContent = `${it.date} — ${it.text} [${it.status}]`; m.appendChild(li); });
+        }
+
+        /* ---------- global filters & helpers ---------- */
+        function globalFilter(q) {
+            q = (q || '').trim().toLowerCase();
+            // quick highlight: filter user table and others
+            renderUserTable(q);
+        }
+
+        function filterUserTable(q) {
+            renderUserTable(q);
+        }
+
+        /* ---------- delete user data & sync ---------- */
+        // If admin wants to remove a user's localStorage entirely, removeUser handles that above
+
+        /* ---------- draw reports ---------- */
+        let reportChart = null;
+        function drawReports() {
+            const ctx = document.getElementById('reportChart').getContext('2d');
+            if (reportChart) reportChart.destroy();
+            reportChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Users', 'Quizzes', 'Fines', 'Messages'],
+                    datasets: [{ data: [users.length, quizzes.length, fines.length, messages.length], backgroundColor: ['#3b82f6', '#10b981', '#ffb200', '#ef4444'] }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+        renderAll();
+        show('overview');
+
+        /* ---------- logout ---------- */
+        function logout() { if (confirm('Logout?')) { alert('Logged out (demo)'); /* redirect if needed */ } }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DriveSafely – Safety Rules & Reminders</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-color: #17191e;
+      --text-color: #e6f7fa;
+      --header-bg: rgba(69, 67, 67, 0.342);
+      --card-bg: #23242a;
+      --cta-bg: #26272e;
+      --footer-bg: #111216;
+      --highlight-color: #33ffd1;
+      --primary-btn-bg: #ffb200;
+      --primary-btn-text: #17191e;
+      --outline-btn-border: #ffb200;
+      --intro-bg-start: #54585b;
+      --intro-bg-end: #111825;
+      --shadow-color: rgba(77, 74, 74, 0.348);
+      --nav-link-hover: gold;
+      --subtitle-color: #b0b9c7;
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f5f5f5;
+      --text-color: #333333;
+      --header-bg: rgba(248, 248, 248, 0.386);
+      --card-bg: #eae5e5c7;
+      --cta-bg: #c3c0c0;
+      --footer-bg: #ffffffc7;
+      --highlight-color: #1a73e8;
+      --primary-btn-bg: #1a73e8;
+      --primary-btn-text: #ffffff;
+      --outline-btn-border: #1a73e8;
+      --intro-bg-start: #e0e0e0;
+      --intro-bg-end: #ffffff;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --nav-link-hover: #1a73e8;
+      --subtitle-color: #666666;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    header {
+      top: 0;
+      background: var(--header-bg);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+      border-bottom: none;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      max-width: 100vw;
+      margin: 0 auto;
+      border-bottom: none;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+      letter-spacing: 1px;
+    }
+
+    .logo:hover {
+      transform: translateX(12px);
+      transition: all 0.8s ease-in-out;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 0;
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    .menu-toggle .bar {
+      display: block;
+      width: 26px;
+      height: 2px;
+      background: var(--text-color);
+      margin: 6px 0;
+      transition: transform .3s ease, opacity .3s ease;
+    }
+
+    .theme-toggle {
+      background: var(--intro-bg-start);
+      border: 1px solid gray;
+      cursor: pointer;
+      font-size: 1.5em;
+      color: var(--text-color);
+      padding: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-toggle:hover .theme-icon {
+      transform: scale(1.3);
+      transition: transform 0.3s ease;
+    }
+
+    .nav-links {
+      list-style-type: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+    }
+
+    .nav-links li {
+      margin: 0 15px;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 500;
+      font-size: 17px;
+      transition: all 0.3s;
+      border-bottom: none;
+    }
+
+    .navbar a:hover {
+      color: var(--nav-link-hover);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .active {
+      color: var(--text-color) !important;
+      font-weight: bold;
+      border-bottom: none;
+    }
+
+    .active:hover {
+      color: var(--nav-link-hover) !important;
+      font-weight: bold;
+    }
+
+    .get-started-btn {
+      background: rgba(170, 216, 255, 0.2);
+      border: 2px solid #797575;
+      border-radius: 5px;
+      padding: 10px 20px;
+      color: var(--text-color);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 1s;
+    }
+
+    .get-started-btn:hover {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      font-size: 22px;
+      border: 2px solid var(--text-color);
+      transform: translateX(12px);
+      transition: all 2s ease-in-out;
+      padding: 10px 15px;
+    }
+
+    .get-started-btn a {
+      font-weight: bold;
+      color: var(--text-color);
+      text-decoration: none;
+    }
+
+    .subtitle {
+      color: var(--subtitle-color);
+    }
+
+    .intro-section {
+      background: linear-gradient(90deg, var(--intro-bg-start) 0%, var(--intro-bg-end) 100%);
+      color: var(--text-color);
+      text-align: left;
+      padding: 56px 40px 36px 40px;
+      margin: 95px auto 9px auto;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px var(--shadow-color);
+      width: 55%;
+      max-width: 900px;
+      min-width: 320px;
+    }
+
+    .intro-section h1 {
+      font-size: 2.2em;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .intro-section .highlight {
+      color: var(--primary-btn-bg);
+    }
+
+    .intro-section .intro-text {
+      font-size: 1.2em;
+      margin-bottom: 24px;
+      color: var(--text-color);
+      font-weight: 500;
+    }
+
+    .cta-buttons {
+      margin-bottom: 22px;
+    }
+
+    .btn.primary {
+      background: var(--primary-btn-bg);
+      color: var(--primary-btn-text);
+      border: none;
+      padding: 11px 28px;
+      font-weight: 600;
+      border-radius: 6px;
+      margin-right: 16px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: all 1s ease-in-out;
+    }
+
+    .btn.primary:hover {
+      background: var(--card-bg);
+      color: var(--primary-btn-bg);
+      font-size: 1.3em;
+    }
+
+    .btn.outline {
+      background: transparent;
+      color: var(--primary-btn-bg);
+      border: 2px solid var(--outline-btn-border);
+      padding: 9px 23px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 1s ease-in-out;
+    }
+
+    .btn.outline:hover {
+      background: var(--primary-btn-bg);
+      color: var(--primary-btn-text);
+      font-size: 1.3em;
+    }
+
+    .intro-highlights {
+      margin-top: 6px;
+      font-size: 1.08em;
+      color: var(--text-color);
+      font-weight: 500;
+    }
+
+    .intro-highlights .icon {
+      font-size: 1.2em;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    .middle {
+      display: flex;
+      justify-content: center;
+      margin: 30px;
+    }
+
+    .f1 {
+      font-size: 22px;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+      margin: 40px 0;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 16px var(--shadow-color);
+      padding: 30px 24px;
+      width: 280px;
+      text-align: center;
+      margin: 0 10px;
+    }
+
+    .card:hover {
+      font-size: 17px;
+      background: linear-gradient(90deg, var(--intro-bg-start) 0%, var(--intro-bg-end) 100%);
+      box-shadow: 0 4px 24px var(--shadow-color);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .icon {
+      display: block;
+      font-size: 2em;
+      color: var(--highlight-color);
+      margin-bottom: 10px;
+    }
+
+    .cta {
+      background: var(--cta-bg);
+      margin: 40px auto 0;
+      text-align: center;
+      border-radius: 14px;
+      width: 80%;
+      padding: 30px 0;
+      box-shadow: 0 4px 24px var(--shadow-color);
+    }
+
+    .cta-button {
+      background: var(--highlight-color);
+      color: var(--primary-btn-text);
+      padding: 14px 36px;
+      border-radius: 28px;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-decoration: none;
+      margin-top: 20px;
+      display: inline-block;
+      box-shadow: 0 2px 6px var(--shadow-color);
+      transition: all 1s ease-in-out;
+    }
+
+    .cta-button:hover {
+      background: none;
+      border: 1px solid var(--highlight-color);
+      color: var(--text-color);
+      font-size: 1.3em;
+    }
+
+    footer {
+      background: var(--footer-bg);
+      display: flex;
+      justify-content: space-between;
+      padding: 40px 60px;
+      align-items: start;
+      color: var(--subtitle-color);
+      margin-top: 60px;
+    }
+
+    .footer-about {
+      max-width: 300px;
+    }
+
+    .footer-about h2 {
+      color: var(--highlight-color);
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    .footer-about p {
+      margin-bottom: 14px;
+      color: var(--subtitle-color);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .footer-icons {
+      display: flex;
+      gap: 14px;
+    }
+
+    .footer-icons a {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      color: var(--highlight-color);
+      font-size: 16px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .footer-icons a:hover {
+      background: var(--highlight-color);
+      color: var(--primary-btn-text);
+      font-size: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 56px;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-links h4 {
+      margin-bottom: 8px;
+      color: var(--highlight-color);
+      font-weight: 600;
+    }
+
+    .scroll-animate {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 1s ease-out;
+    }
+
+    .scroll-animate.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .from-left {
+      transform: translateX(-50px);
+    }
+
+    .from-right {
+      transform: translateX(50px);
+    }
+
+    .from-up {
+      transform: translateY(-50px);
+    }
+
+    .from-down {
+      transform: translateY(50px);
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  <header>
+    <nav class="navbar" role="navigation" aria-label="Primary">
+      <div class="logo">
+        <img src="p1.png" alt="DriveSafely Logo"
+          style="height:50px;width:51px;vertical-align:middle;margin-right:10px;">
+        <span>DriveSafely</span>
+      </div>
+
+      <button class="menu-toggle" aria-controls="primary-nav" aria-expanded="false" aria-label="Toggle menu">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+
+      <ul id="primary-nav" class="nav-links">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Safety Rules</a></li>
+        <li><a href="#map">View Map</a></li>
+        <li>
+          <button class="theme-toggle" aria-label="Toggle theme"><span class="theme-icon">🌙</span></button>
+        </li>
+
+        <!-- User Profile + Logout -->
+        <li id="user-profile" style="display:inline-flex;align-items:center;gap:6px;">
+          <img id="profile-pic" src="" alt="" style="width:35px;height:35px;border-radius:50%;">
+          <span id="username">Hemaram..</span>
+        </li>
+        <li id="logout-btn">
+          <button class="get-started-btn" onclick="logout()">Logout</button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Intro Section -->
+    <section class="intro-section scroll-animate from-up" id="home">
+      <h1>Drive Safe. <span class="highlight">Save Lives.</span></h1>
+      <p class="intro-text">Learn essential safety rules, get reminders (seatbelt, helmet, speed), and follow simple
+        practices to make the road safer for everyone.</p>
+      <div class="cta-buttons">
+        <a href="#rules"><button class="btn primary">View Safety Rules</button></a>
+        <button class="btn outline">View Reminders</button>
+      </div>
+      <div class="intro-highlights">
+        <span class="icon">✅</span> Important: Wear helmet/seatbelt • Obey speed limits • Avoid distractions
+      </div>
+    </section>
+
+    <!-- Middle Section -->
+    <section class="middle scroll-animate from-left" id="about">
+      <div class="f1">
+        <h1 class="choose">Why DriveSafely ?</h1>
+        <p class="subtitle" style="margin-top:8px;">Practical rules and reminders to reduce accidents and protect lives.
+        </p>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features scroll-animate from-right" id="rules">
+      <div class="card"><span class="icon">🔒</span>
+        <h2>Wear Seatbelt</h2>
+        <p>Always wear a seatbelt...</p>
+      </div>
+      <div class="card"><span class="icon">🪖</span>
+        <h2>Use Helmet</h2>
+        <p>Helmet is mandatory...</p>
+      </div>
+      <div class="card"><span class="icon">🚦</span>
+        <h2>Obey Traffic Signals</h2>
+        <p>Follow traffic lights...</p>
+      </div>
+      <div class="card"><span class="icon">📵</span>
+        <h2>Avoid Phone Use</h2>
+        <p>Do not use mobile phones...</p>
+      </div>
+      <div class="card"><span class="icon">⚠️</span>
+        <h2>Follow Speed Limits</h2>
+        <p>Speed limits exist...</p>
+      </div>
+      <div class="card"><span class="icon">🧰</span>
+        <h2>Keep Emergency Kit</h2>
+        <p>Carry basic emergency items...</p>
+      </div>
+      <div class="card"><span class="icon">🔒</span>
+        <h2>Wear Seatbelt</h2>
+        <p>Always wear a seatbelt...</p>
+      </div>
+      <div class="card"><span class="icon">🪖</span>
+        <h2>Use Helmet</h2>
+        <p>Helmet is mandatory...</p>
+      </div>
+      <div class="card"><span class="icon">🚦</span>
+        <h2>Obey Traffic Signals</h2>
+        <p>Follow traffic lights...</p>
+      </div>
+      <div class="card"><span class="icon">📵</span>
+        <h2>Avoid Phone Use</h2>
+        <p>Do not use mobile phones...</p>
+      </div>
+      <div class="card"><span class="icon">⚠️</span>
+        <h2>Follow Speed Limits</h2>
+        <p>Speed limits exist...</p>
+      </div>
+      <div class="card"><span class="icon">🧰</span>
+        <h2>Keep Emergency Kit</h2>
+        <p>Carry basic emergency items...</p>
+      </div>
+      <div class="card"><span class="icon">🔒</span>
+        <h2>Wear Seatbelt</h2>
+        <p>Always wear a seatbelt...</p>
+      </div>
+      <div class="card"><span class="icon">🪖</span>
+        <h2>Use Helmet</h2>
+        <p>Helmet is mandatory...</p>
+      </div>
+      <div class="card"><span class="icon">🚦</span>
+        <h2>Obey Traffic Signals</h2>
+        <p>Follow traffic lights...</p>
+      </div>
+      <div class="card"><span class="icon">📵</span>
+        <h2>Avoid Phone Use</h2>
+        <p>Do not use mobile phones...</p>
+      </div>
+      <div class="card"><span class="icon">⚠️</span>
+        <h2>Follow Speed Limits</h2>
+        <p>Speed limits exist...</p>
+      </div>
+      <div class="card"><span class="icon">🧰</span>
+        <h2>Keep Emergency Kit</h2>
+        <p>Carry basic emergency items...</p>
+      </div>
+      <div class="card"><span class="icon">🔒</span>
+        <h2>Wear Seatbelt</h2>
+        <p>Always wear a seatbelt...</p>
+      </div>
+      <div class="card"><span class="icon">🪖</span>
+        <h2>Use Helmet</h2>
+        <p>Helmet is mandatory...</p>
+      </div>
+      <div class="card"><span class="icon">🚦</span>
+        <h2>Obey Traffic Signals</h2>
+        <p>Follow traffic lights...</p>
+      </div>
+      <div class="card"><span class="icon">📵</span>
+        <h2>Avoid Phone Use</h2>
+        <p>Do not use mobile phones...</p>
+      </div>
+      <div class="card"><span class="icon">⚠️</span>
+        <h2>Follow Speed Limits</h2>
+        <p>Speed limits exist...</p>
+      </div>
+      <div class="card"><span class="icon">🧰</span>
+        <h2>Keep Emergency Kit</h2>
+        <p>Carry basic emergency items...</p>
+      </div>
+    </section>
+
+    <section class="cta scroll-animate from-down" id="tips">
+      <h2>🚦 Test Your Knowledge</h2>
+      <p>Maintain safe following distance, signal lane changes...</p>
+      <a class="cta-button" href="quiz.html">Attempt Quiz</a>
+    </section>
+
+    <section class="cta scroll-animate from-left" id="account">
+      <h2>My Account</h2>
+      <p>Check your driving records and profile securely.</p>
+      <a class="cta-button" href="user_dashboard.html">Check Profile</a>
+    </section>
+  </main>
+
+  <footer class="scroll-animate from-up" id="contact">
+    <div class="footer-about">
+      <h2>&copy; 2025 DriveSafely. <br>All rights reserved.</h2>
+      <p>Road safety rules, reminders, and resources created to help drivers and riders make safer choices.</p>
+      <div class="footer-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-threads"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+    <div class="footer-links">
+      <div>
+        <h4>Rules</h4>
+        <ul>
+          <li>Seatbelt & Helmet</li>
+          <li>Signals & Signs</li>
+          <li>Speed Limits</li>
+          <li>Safe Overtaking</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li>Local Traffic Laws</li>
+          <li>First Aid Guide</li>
+          <li>Emergency Contacts</li>
+          <li>Training Centers</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li>Help Center</li>
+          <li>Contact Us</li>
+          <li>Privacy Policy</li>
+          <li>Terms of Service</li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle
+    const themeToggle = document.querySelector('.theme-toggle');
+    const themeIcon = document.querySelector('.theme-icon');
+    themeToggle.addEventListener('click', () => {
+      document.body.toggleAttribute('data-theme');
+      themeIcon.textContent = document.body.hasAttribute('data-theme') ? '☀️' : '🌙';
+    });
+
+    // Active link highlight
+    const sections = document.querySelectorAll("section");
+    const navLinks = document.querySelectorAll(".nav-links a");
+    window.addEventListener("scroll", () => {
+      let current = "";
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop - 150;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+          current = section.getAttribute("id");
+        }
+      });
+      navLinks.forEach((link) => {
+        link.classList.remove("active");
+        if (link.getAttribute("href") === "#" + current) link.classList.add("active");
+      });
+    });
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => { if (entry.isIntersecting) entry.target.classList.add("show"); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.scroll-animate').forEach((el) => observer.observe(el));
+
+    // ✅ Logout function with redirect
+    function logout() {
+      alert("Logged out successfully!");
+      document.getElementById("user-profile").style.display = "none";
+      document.getElementById("logout-btn").style.display = "none";
+      window.location.href = "index.html"; // redirect
+    }
+  </script>
+</body>
+
+</html>

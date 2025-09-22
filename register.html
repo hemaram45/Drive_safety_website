@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Stock Portfolio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      background: linear-gradient(135deg, #182557, #c05776);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-container {
+      background: rgba(255, 249, 249, 0.412);
+      backdrop-filter: blur(1px);
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 350px;
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      font-size: 29px;
+      font-weight: 700;
+      color: #1d2b64;
+      text-align: center;
+    }
+
+    .input-group {
+      position: relative;
+      width: 98%;
+      margin: 12px -5px;
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.269);
+      backdrop-filter: blur(1px);
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.768);
+      padding: 0 10px;
+    }
+
+    .input-group i {
+      color: #000000;
+      font-size: 15px;
+      margin-left: 4px;
+      margin-right: 8px;
+    }
+
+    .input-divider {
+      width: 1px;
+      height: 60%;
+      background: #ccc;
+      margin-right: 8px;
+    }
+
+    .input-group input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 12px 8px;
+      font-size: 15px;
+      background: transparent;
+    }
+
+    .input-group .toggle-password {
+      cursor: pointer;
+      color: #000000;
+      margin-right: 6px;
+    }
+
+    .password-message {
+      font-size: 13px;
+      margin: -5px 0 8px 5px;
+      font-weight: 500;
+    }
+
+    .password-message.match {
+      color: green;
+    }
+
+    .password-message.nomatch {
+      color: red;
+    }
+
+    button {
+      font-size: 16px;
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background: #1d2b64;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+
+    button:hover:enabled {
+      background: #9242cc;
+      transform: translateY(-8px);
+    }
+
+    .text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 1px;
+    }
+
+    .dont {
+      font-size: 17px;
+    }
+
+    .btn-register-custom {
+      background-color: #000;
+      color: #fff;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 50px;
+      font-size: 17px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      margin-bottom: -9px;
+    }
+
+    .btn-register-custom:hover {
+      background-color: #28a745;
+      font-size: 19px;
+      color: #fff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container">
+    <h2>Create Account</h2>
+    <form action="register.php" method="POST" onsubmit="return checkPasswordMatch()">
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <div class="input-divider"></div>
+        <input type="text" name="username" placeholder="Username" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <div class="input-divider"></div>
+        <input type="email" name="email" placeholder="Email" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <div class="input-divider"></div>
+        <input type="password" name="password" id="password" placeholder="Password" required>
+        <i class="fas fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <div class="input-divider"></div>
+        <input type="password" name="confirm_password" id="confirm_password" placeholder="Re-enter Password" required>
+        <i class="fas fa-eye toggle-password" onclick="togglePassword('confirm_password', this)"></i>
+      </div>
+      <!-- Real-time message -->
+      <p id="passwordMessage" class="password-message"></p>
+
+      <button type="submit" id="registerBtn" disabled>Register</button>
+    </form>
+
+    <div class="text">
+      <p class="dont">Already have an account?</p>
+      <a href="Login.html" class="btn-register-custom">
+        <i class="fas fa-sign-in-alt"></i> Login Here
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function togglePassword(id, icon) {
+      const field = document.getElementById(id);
+      if (field.type === "password") {
+        field.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        field.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    }
+
+    function checkPasswordMatch() {
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirm_password").value;
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return false;
+      }
+      return true;
+    }
+
+    const passwordField = document.getElementById("password");
+    const confirmPasswordField = document.getElementById("confirm_password");
+    const message = document.getElementById("passwordMessage");
+    const registerBtn = document.getElementById("registerBtn");
+
+    function validatePasswords() {
+      if (confirmPasswordField.value.length === 0) {
+        message.textContent = "";
+        registerBtn.disabled = true;
+        return;
+      }
+      if (passwordField.value === confirmPasswordField.value) {
+        message.textContent = "✅ Passwords match";
+        message.className = "password-message match";
+        registerBtn.disabled = false;
+      } else {
+        message.textContent = "❌ Passwords do not match";
+        message.className = "password-message nomatch";
+        registerBtn.disabled = true;
+      }
+    }
+
+    passwordField.addEventListener("input", validatePasswords);
+    confirmPasswordField.addEventListener("input", validatePasswords);
+  </script>
+</body>
+
+</html>
