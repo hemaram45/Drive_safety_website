@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DriveSafely Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .quiz-container {
+      width: 100%;
+      max-width: 600px;
+      perspective: 1000px;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 16px;
+      padding: 30px 25px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+      text-align: center;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+      transform-style: preserve-3d;
+    }
+
+    .card.hide {
+      transform: rotateY(90deg);
+      opacity: 0;
+    }
+
+    h1 {
+      color: #ffb200;
+      margin-bottom: 15px;
+      font-size: 2em;
+    }
+
+    .question {
+      font-size: 1.3em;
+      margin-bottom: 25px;
+    }
+
+    .options {
+      list-style: none;
+      padding: 0;
+    }
+
+    .options li {
+      margin: 12px 0;
+    }
+
+    .options button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .options button:hover {
+      transform: scale(1.05);
+    }
+
+    .options button.correct {
+      background: #4caf50;
+      color: #17191e;
+    }
+
+    .options button.wrong {
+      background: #ff4d4d;
+      color: #fff;
+    }
+
+    #next-btn, #retry-btn {
+      margin-top: 20px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    #next-btn {
+      background: #33ffd1;
+      color: #17191e;
+    }
+
+    #next-btn:hover {
+      background: #17191e;
+      color: #33ffd1;
+      border: 1px solid #33ffd1;
+    }
+
+    #retry-btn {
+      background: #ffb200;
+      color: #17191e;
+    }
+
+    #retry-btn:hover {
+      background: #33ffd1;
+      color: #17191e;
+    }
+
+    #result {
+      font-size: 1.4em;
+      margin-top: 20px;
+      color: #33ffd1;
+    }
+
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 18px;
+      background: #ffb200;
+      color: #17191e;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(77, 74, 74, 0.348);
+      transition: all 0.3s ease-in-out;
+      z-index: 1000;
+    }
+
+    .back-btn:hover {
+      background: #33ffd1;
+      color: #17191e;
+      transform: translateY(-3px);
+    }
+  </style>
+</head>
+
+<body>
+  <a href="user_index.html" class="back-btn">← Back</a>
+
+  <div class="quiz-container">
+    <div class="card" id="card">
+      <h1>DriveSafely Quiz</h1>
+      <div id="question" class="question"></div>
+      <ul id="options" class="options"></ul>
+      <button id="next-btn" onclick="nextQuestion()">Next</button>
+    </div>
+    <div id="result"></div>
+    <button id="retry-btn" onclick="restartQuiz()">Retry Quiz</button>
+  </div>
+
+  <script>
+    const quizData = [
+      { question: "What should you always wear while driving?", options: ["Helmet", "Seatbelt", "Sunglasses", "Hat"], answer: "Seatbelt" },
+      { question: "Is wearing a helmet mandatory for riders?", options: ["Yes", "No"], answer: "Yes" },
+      { question: "What should you do at a red traffic light?", options: ["Stop", "Go", "Speed Up", "Honk"], answer: "Stop" },
+      { question: "Can you use your phone while driving?", options: ["Yes", "No"], answer: "No" },
+      { question: "Why should you obey speed limits?", options: ["Avoid fines", "Ensure safety", "Both", "None"], answer: "Both" },
+      { question: "What is an important item to carry for emergencies?", options: ["Emergency kit", "Extra fuel", "GPS device", "Map"], answer: "Emergency kit" },
+      { question: "What is the safest way to overtake?", options: ["Signal & pass carefully", "Speed up", "Honk & pass", "Ignore lane rules"], answer: "Signal & pass carefully" },
+      { question: "When should you use seatbelt?", options: ["Only on highways", "Always", "Only at night", "Only when police is nearby"], answer: "Always" },
+      { question: "What is the safe following distance?", options: ["1 second", "2 seconds", "3 seconds", "5 seconds"], answer: "3 seconds" },
+      { question: "Is drunk driving allowed?", options: ["Yes", "No"], answer: "No" },
+      { question: "When should you use indicators?", options: ["Only while turning", "Always before lane change", "Never", "Randomly"], answer: "Always before lane change" },
+      { question: "Who has the right of way at a roundabout?", options: ["Entering car", "Exiting car", "Car already inside", "Pedestrian"], answer: "Car already inside" },
+      { question: "What should you do if brakes fail?", options: ["Use handbrake", "Turn off engine", "Shift to neutral & slow down", "Jump out"], answer: "Shift to neutral & slow down" },
+      { question: "When is it safe to cross railway tracks?", options: ["Anytime", "Only when barriers are open", "Even if warning lights flash", "Never"], answer: "Only when barriers are open" },
+      { question: "What should you check before long trips?", options: ["Fuel", "Tires", "Lights & brakes", "All of the above"], answer: "All of the above" }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    const card = document.getElementById("card");
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const nextBtn = document.getElementById("next-btn");
+    const retryBtn = document.getElementById("retry-btn");
+    const resultDiv = document.getElementById("result");
+
+    function loadQuestion() {
+      nextBtn.style.display = "none";
+      card.classList.remove("hide");
+      questionEl.textContent = quizData[currentQuestion].question;
+      optionsEl.innerHTML = "";
+      quizData[currentQuestion].options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => selectAnswer(btn, opt);
+        const li = document.createElement("li");
+        li.appendChild(btn);
+        optionsEl.appendChild(li);
+      });
+    }
+
+    function selectAnswer(button, selected) {
+      const correct = quizData[currentQuestion].answer;
+      if (selected === correct) {
+        button.classList.add("correct");
+        score++;
+      } else {
+        button.classList.add("wrong");
+      }
+      Array.from(optionsEl.children).forEach(li => {
+        li.firstChild.disabled = true;
+        if (li.firstChild.textContent === correct) li.firstChild.classList.add("correct");
+      });
+      nextBtn.style.display = "block";
+    }
+
+    function nextQuestion() {
+      card.classList.add("hide");
+      setTimeout(() => {
+        currentQuestion++;
+        if (currentQuestion < quizData.length) {
+          loadQuestion();
+        } else {
+          showResult();
+        }
+      }, 600);
+    }
+
+    function showResult() {
+      card.style.display = "none";
+      resultDiv.textContent = `You scored ${score} out of ${quizData.length}!`;
+      retryBtn.style.display = "inline-block";
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      resultDiv.textContent = "";
+      retryBtn.style.display = "none";
+      card.style.display = "block";
+      loadQuestion();
+    }
+
+    loadQuestion();
+  </script>
+</body>
+
+</html>
