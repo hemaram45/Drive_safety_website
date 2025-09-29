@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DriveSafely – Find Us</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Root variables */
+    :root {
+      --bg-color: #17191e;
+      --text-color: #e6f7fa;
+      --header-bg: rgba(69, 67, 67, 0.342);
+      --highlight-color: #33ffd1;
+      --shadow-color: rgba(77, 74, 74, 0.348);
+      --card-bg: #23242a;
+      --primary-btn-bg: #ffb200;
+      --primary-btn-text: #17191e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      scroll-behavior: smooth;
+    }
+
+    header {
+      top: 0;
+      background: var(--header-bg);
+      backdrop-filter: blur(2px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      letter-spacing: 1px;
+    }
+
+    .logo img {
+      height: 50px;
+      width: 51px;
+      margin-right: 10px;
+    }
+
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    nav a:hover {
+      color: var(--highlight-color);
+      font-size: 18px;
+    }
+
+    main {
+      padding-top: 90px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: var(--highlight-color);
+      margin-bottom: 20px;
+    }
+
+    p.subtitle {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+      color: #b0b9c7;
+    }
+
+    .map-container {
+      width: 90%;
+      max-width: 900px;
+      height: 500px;
+      margin: 0 auto 60px auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px var(--shadow-color);
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .cta-button {
+      background: var(--highlight-color);
+      color: var(--primary-btn-text);
+      padding: 14px 36px;
+      border-radius: 28px;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 2px 6px var(--shadow-color);
+      transition: all 0.5s ease-in-out;
+    }
+
+    .cta-button:hover {
+      background: none;
+      border: 2px solid var(--highlight-color);
+      color: var(--text-color);
+      font-size: 1.2em;
+    }
+
+    footer {
+      background: var(--card-bg);
+      padding: 40px 20px;
+      text-align: center;
+      color: #b0b9c7;
+    }
+
+    footer a {
+      color: var(--highlight-color);
+      text-decoration: none;
+      margin: 0 8px;
+      font-size: 18px;
+      transition: all 0.3s;
+    }
+
+    footer a:hover {
+      color: var(--primary-btn-bg);
+    }
+
+    /* Responsive */
+    @media (max-width:768px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      .map-container {
+        height: 350px;
+      }
+
+      nav a {
+        margin-left: 12px;
+      }
+    }
+
+    @media (max-width:480px) {
+      h1 {
+        font-size: 1.7em;
+      }
+
+      .map-container {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">
+      <img src="p1.png" alt="DriveSafely Logo">
+      DriveSafely
+    </div>
+    <nav>
+      <a href="user_index.html">Home</a>
+      <a href="#">Safety Rules</a>
+      <a href="#">Quiz</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Our Location</h1>
+    <p class="subtitle">Find our main office or training center on the map below.</p>
+
+    <div class="map-container">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.019441439419!2d144.96305781573686!3d-37.81410787975157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d43f1f0f1f1%3A0x5045675218ce6e0!2sMelbourne%20VIC%2C%20Australia!5e0!3m2!1sen!2sin!4v1695891234567!5m2!1sen!2sin"
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    <a href="user_index.html" class="cta-button">Back to Home</a>
+  </main>
+
+  <footer>
+    &copy; 2025 DriveSafely. All rights reserved. 
+    <br>
+    <a href="#"><i class="fab fa-facebook-f"></i></a>
+    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    <a href="#"><i class="fab fa-instagram"></i></a>
+  </footer>
+</body>
+</html>
